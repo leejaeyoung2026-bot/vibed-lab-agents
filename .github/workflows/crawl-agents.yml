@@ -1,0 +1,32 @@
+name: Crawl Claude Code agents
+
+on:
+  schedule:
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm ci
+      - run: npm run crawl
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit changes
+        run: |
+          git config user.name "vibed-lab-bot"
+          git config user.email "bot@vibed-lab.com"
+          git add data/agents.json
+          if git diff --staged --quiet; then
+            echo "No changes"
+          else
+            git commit -m "chore: weekly agent crawl"
+            git push
+          fi
