@@ -3,7 +3,7 @@ import {
   getFeaturedAgents,
   getTrending,
 } from "@/lib/data";
-import { CATEGORIES, categoryLabel } from "@/lib/categories";
+import { CATEGORIES } from "@/lib/categories";
 import AgentCard from "@/components/AgentCard";
 
 export default function Home() {

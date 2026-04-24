@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     title: "Claude Code Agents — vibed-lab",
     description: "Curated weekly directory of Claude Code agents.",
     url: "https://agents.vibed-lab.com",
-    siteName: "vibed-lab agents",
+    siteName: "Vibed Lab · Agents",
     type: "website",
   },
 };
@@ -21,14 +21,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
         <header className="site-header">
           <a href="/" className="brand">
             <strong>vibed-lab</strong> / agents
           </a>
           <nav>
-            <a href="https://vibed-lab.com">← vibed-lab.com</a>
+            <a href="https://vibed-lab.com" rel="noopener noreferrer">← vibed-lab.com</a>
           </nav>
         </header>
         <main>{children}</main>

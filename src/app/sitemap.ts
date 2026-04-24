@@ -26,12 +26,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  const agentEntries: MetadataRoute.Sitemap = agents.map((agent) => ({
-    url: `${BASE_URL}/agent/${agent.slug}`,
-    lastModified: new Date(agent.crawledAt),
-    changeFrequency: "weekly",
-    priority: 0.6,
-  }));
+  const agentEntries: MetadataRoute.Sitemap = agents.map((agent) => {
+    const crawledDate = new Date(agent.crawledAt);
+    const lastModified = isNaN(crawledDate.getTime()) ? today : crawledDate;
+    return {
+      url: `${BASE_URL}/agent/${agent.slug}`,
+      lastModified,
+      changeFrequency: "weekly" as const,
+      priority: 0.6,
+    };
+  });
 
   return [...staticEntries, ...categoryEntries, ...agentEntries];
 }
