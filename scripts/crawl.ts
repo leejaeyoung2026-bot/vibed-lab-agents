@@ -29,6 +29,7 @@ const SEARCH_QUERIES = [
 const MIN_STARS = 5;
 const MAX_AGE_DAYS = 365;
 const PER_PAGE = 100;
+const MAX_PAGES = 10;
 
 type PreviousSnapshot = Record<string, number>;
 
@@ -44,19 +45,27 @@ function loadPreviousStars(): PreviousSnapshot {
   }
 }
 
-async function searchRepos(query: string) {
+/**
+ * Search GitHub repos for a given query with full pagination.
+ * Appends `archived:false` to exclude archived repos.
+ * Throws on HTTP error so the caller can abort the write.
+ */
+async function searchRepos(query: string): Promise<any[]> {
+  const fullQuery = `${query} archived:false`;
   const results: any[] = [];
-  try {
+
+  for (let page = 1; page <= MAX_PAGES; page++) {
     const res = await octokit.search.repos({
-      q: query,
+      q: fullQuery,
       sort: "stars",
       order: "desc",
       per_page: PER_PAGE,
+      page,
     });
     results.push(...res.data.items);
-  } catch (err) {
-    console.warn(`Search failed for "${query}":`, (err as Error).message);
+    if (res.data.items.length < PER_PAGE) break;
   }
+
   return results;
 }
 
@@ -89,18 +98,23 @@ function daysBetween(iso: string): number {
 
 async function main() {
   const previous = loadPreviousStars();
-  const seen = new Set<string>();
+  // Dedup by numeric GitHub repo ID to handle renames/forks correctly.
+  // The output slug remains ${owner}-${name} to avoid breaking existing URLs.
+  const seenIds = new Map<string, true>();
   const agents: Agent[] = [];
   const now = new Date().toISOString();
 
   for (const query of SEARCH_QUERIES) {
     console.log(`Searching: ${query}`);
+
+    // Let errors propagate — do NOT silently swallow them.
+    // If any query fails, the run will abort and agents.json will not be overwritten.
     const repos = await searchRepos(query);
 
     for (const repo of repos) {
-      const slug = `${repo.owner.login}-${repo.name}`.toLowerCase();
-      if (seen.has(slug)) continue;
-      seen.add(slug);
+      const repoId = String(repo.id);
+      if (seenIds.has(repoId)) continue;
+      seenIds.set(repoId, true);
 
       if (repo.stargazers_count < MIN_STARS) continue;
       if (repo.fork) continue;
@@ -112,6 +126,8 @@ async function main() {
       const topics: string[] = repo.topics ?? [];
       const categories = extractCategories(description, topics, readme);
 
+      // Use human-readable slug for output (preserves existing URLs)
+      const slug = `${repo.owner.login}-${repo.name}`.toLowerCase();
       const prevStars = previous[slug] ?? repo.stargazers_count;
       const starsDelta7d = repo.stargazers_count - prevStars;
 
