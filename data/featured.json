@@ -1,1 +1,18 @@
-{}
+{
+  "2026-04-27": {
+    "picks": [
+      {
+        "slug": "thedotmack-claude-mem",
+        "comment": "Auto-captures Claude's actions during a session, compresses them, and re-injects relevant context into future sessions. Solves the 'every conversation starts from scratch' problem. +13k stars in seven days — the fastest-rising agent of the week."
+      },
+      {
+        "slug": "shanraisshan-claude-code-best-practice",
+        "comment": "A practitioner's notebook on patterns that actually move the needle when you're past the demo phase — agentic engineering, not vibe coding. Read it before installing your fifth code reviewer."
+      },
+      {
+        "slug": "donchitos-claude-code-game-studios",
+        "comment": "49 agents and 72 skills arranged like an actual game studio org chart. Niche, but the cleanest example I've seen of orchestrating many agents around one coherent workflow — worth studying even if you don't ship games."
+      }
+    ]
+  }
+}
