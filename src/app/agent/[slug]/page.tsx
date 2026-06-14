@@ -27,6 +27,10 @@ export async function generateMetadata({
   return {
     title,
     description,
+    // Thin auto-generated repo cards (GitHub meta + README preview). Kept out of
+    // the index to stop them diluting the sc-domain quality signal, but follow is
+    // preserved so hub link equity still flows. See GSC diagnosis 2026-06-14.
+    robots: { index: false, follow: true },
     openGraph: {
       title,
       description,
