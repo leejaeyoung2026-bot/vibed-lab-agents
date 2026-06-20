@@ -1,5 +1,4 @@
 import type { MetadataRoute } from "next";
-import { getAllAgents } from "@/lib/data";
 import { CATEGORIES } from "@/lib/categories";
 
 const BASE_URL = "https://agents.vibed-lab.com";
@@ -8,7 +7,6 @@ export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const today = new Date();
-  const agents = getAllAgents();
 
   const staticEntries: MetadataRoute.Sitemap = [
     {
@@ -26,16 +24,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  const agentEntries: MetadataRoute.Sitemap = agents.map((agent) => {
-    const crawledDate = new Date(agent.crawledAt);
-    const lastModified = isNaN(crawledDate.getTime()) ? today : crawledDate;
-    return {
-      url: `${BASE_URL}/agent/${agent.slug}`,
-      lastModified,
-      changeFrequency: "weekly" as const,
-      priority: 0.6,
-    };
-  });
-
-  return [...staticEntries, ...categoryEntries, ...agentEntries];
+  // Individual /agent/[slug] detail pages are noindex (see metadata fix
+  // 2026-06-14); excluding them avoids GSC "Submitted URL marked noindex".
+  return [...staticEntries, ...categoryEntries];
 }

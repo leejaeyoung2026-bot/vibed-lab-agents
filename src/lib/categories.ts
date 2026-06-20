@@ -53,6 +53,18 @@ export const CATEGORIES: Category[] = [
   },
 ];
 
+function escapeRegExp(str: string): string {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+// Match a keyword on word boundaries so e.g. "ci" does not match "specification"
+// and "ml" does not match "html". Whitespace in multi-word keywords (e.g.
+// "machine learning") tolerates any run of whitespace between tokens.
+function matchesKeyword(haystack: string, keyword: string): boolean {
+  const pattern = escapeRegExp(keyword).replace(/\s+/g, "\\s+");
+  return new RegExp(`(?<![a-z0-9])${pattern}(?![a-z0-9])`).test(haystack);
+}
+
 export function extractCategories(
   description: string,
   topics: string[],
@@ -63,7 +75,7 @@ export function extractCategories(
     .toLowerCase();
   const matched = new Set<string>();
   for (const cat of CATEGORIES) {
-    if (cat.keywords.some((kw) => haystack.includes(kw))) {
+    if (cat.keywords.some((kw) => matchesKeyword(haystack, kw))) {
       matched.add(cat.slug);
     }
   }
