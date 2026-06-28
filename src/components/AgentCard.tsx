@@ -19,7 +19,7 @@ export default function AgentCard({ agent, featuredComment }: Props) {
       <div className="card-meta">
         <span className="stars">{agent.stars.toLocaleString()}</span>
         {agent.starsDelta7d > 0 && (
-          <span className="delta">+{agent.starsDelta7d} this week</span>
+          <span className="delta">+{agent.starsDelta7d} since last crawl</span>
         )}
       </div>
       {agent.categories.length > 0 && (

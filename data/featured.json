@@ -3,7 +3,7 @@
     "picks": [
       {
         "slug": "thedotmack-claude-mem",
-        "comment": "Auto-captures Claude's actions during a session, compresses them, and re-injects relevant context into future sessions. Solves the 'every conversation starts from scratch' problem. +13k stars in seven days — the fastest-rising agent of the week."
+        "comment": "Auto-captures Claude's actions during a session, compresses them, and re-injects relevant context into future sessions. Solves the 'every conversation starts from scratch' problem."
       },
       {
         "slug": "shanraisshan-claude-code-best-practice",

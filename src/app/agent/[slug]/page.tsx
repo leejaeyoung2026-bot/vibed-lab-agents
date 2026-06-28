@@ -96,8 +96,11 @@ export default async function AgentPage({
         </div>
         <aside>
           <div className="install-box">
-            <h3>Install</h3>
+            <h3>Clone repo</h3>
             <pre>{agent.installSnippet}</pre>
+            <p className="install-note">
+              Clones the source for inspection — not a guaranteed agent install.
+            </p>
           </div>
         </aside>
       </div>

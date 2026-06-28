@@ -41,7 +41,7 @@ export default function Home() {
       <section className="section">
         <h2>
           Trending
-          <span className="count">sorted by weekly star growth</span>
+          <span className="count">sorted by recent star growth</span>
         </h2>
         {trending.length === 0 ? (
           <div className="empty-state">
